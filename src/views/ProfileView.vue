@@ -191,7 +191,7 @@ const confirmNewPassword = ref('')
 const successMessage = ref('')
 
 // Initialize form values
-onMounted(() => {
+onMounted(async () => {
   if (authStore.user) {
     username.value = authStore.user.username
     avatarUrl.value = authStore.user.avatar_url || ''
@@ -200,6 +200,11 @@ onMounted(() => {
   // Check for GitHub link success
   if (route.query.status === 'github_linked') {
     successMessage.value = 'GitHub аккаунт успешно привязан!'
+    // Refresh profile to show linked account status immediately
+    await authStore.fetchProfile()
+    
+    // Clean URL
+    router.replace({ query: {} })
   }
 })
 

@@ -10,6 +10,13 @@ export const useReviewStore = defineStore('review', () => {
   const currentPage = ref(1)
   const pageSize = ref(20)
   const isLoading = ref(false)
+  
+  // Separate loading states
+  const isFetching = ref(false)
+  const isCreating = ref(false)
+  const isDeleting = ref(false)
+  const isReanalyzing = ref(false)
+
   const error = ref<string | null>(null)
 
   // Computed
@@ -31,6 +38,7 @@ export const useReviewStore = defineStore('review', () => {
   // Actions
   async function fetchReviews(page: number = 1) {
     isLoading.value = true
+    isFetching.value = true
     error.value = null
     try {
       const response = await reviewsApi.getList(page, pageSize.value)
@@ -43,11 +51,13 @@ export const useReviewStore = defineStore('review', () => {
       return false
     } finally {
       isLoading.value = false
+      isFetching.value = false
     }
   }
 
   async function fetchReview(id: string) {
     isLoading.value = true
+    isFetching.value = true
     error.value = null
     try {
       currentReview.value = await reviewsApi.getById(id)
@@ -57,11 +67,13 @@ export const useReviewStore = defineStore('review', () => {
       return false
     } finally {
       isLoading.value = false
+      isFetching.value = false
     }
   }
 
   async function createReview(input: CreateReviewInput) {
     isLoading.value = true
+    isCreating.value = true
     error.value = null
     try {
       const review = await reviewsApi.create(input)
@@ -73,11 +85,13 @@ export const useReviewStore = defineStore('review', () => {
       return null
     } finally {
       isLoading.value = false
+      isCreating.value = false
     }
   }
 
   async function deleteReview(id: string) {
     isLoading.value = true
+    isDeleting.value = true
     error.value = null
     try {
       await reviewsApi.delete(id)
@@ -91,11 +105,13 @@ export const useReviewStore = defineStore('review', () => {
       return false
     } finally {
       isLoading.value = false
+      isDeleting.value = false
     }
   }
 
   async function reanalyzeReview(id: string) {
     isLoading.value = true
+    isReanalyzing.value = true
     error.value = null
     try {
       const review = await reviewsApi.reanalyze(id)
@@ -113,6 +129,7 @@ export const useReviewStore = defineStore('review', () => {
       return null
     } finally {
       isLoading.value = false
+      isReanalyzing.value = false
     }
   }
 
@@ -155,6 +172,10 @@ export const useReviewStore = defineStore('review', () => {
     currentPage,
     pageSize,
     isLoading,
+    isFetching,
+    isCreating,
+    isDeleting,
+    isReanalyzing,
     error,
     
     // Getters

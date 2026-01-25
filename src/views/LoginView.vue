@@ -46,7 +46,7 @@
             variant="primary"
             size="lg"
             block
-            :loading="authStore.isLoading">
+            :loading="authStore.isLoggingIn">
             Войти
           </BaseButton>
 
@@ -59,7 +59,7 @@
             variant="github"
             size="lg"
             block
-            :loading="authStore.isLoading"
+            :loading="authStore.isGitHubLoggingIn"
             @click="handleGitHubLogin">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path
@@ -104,7 +104,30 @@ const oauthErrorMessage = computed(() => {
   return errors[oauthError.value] || 'Произошла ошибка';
 });
 
-onMounted(() => {
+onMounted(async () => {
+  // Check for OAuth token in URL (GitHub Login/Link success)
+  const token = route.query.token as string;
+  if (token) {
+    try {
+      await authStore.handleGitHubCallback(token);
+      if (authStore.isAuthenticated) {
+        // Check for return URL (e.g. from failed link attempt landing on login)
+        const returnUrl = sessionStorage.getItem('auth_return_url');
+        sessionStorage.removeItem('auth_return_url');
+        
+        const redirect = route.query.redirect as string;
+        router.push(returnUrl || redirect || '/reviews');
+      } else {
+        oauthError.value = 'auth_failed';
+      }
+    } catch (e) {
+      oauthError.value = 'auth_failed';
+    }
+    // Clean URL
+    router.replace({ query: {} });
+    return;
+  }
+
   // Check for OAuth error in URL
   if (route.query.error) {
     oauthError.value = route.query.error as string;

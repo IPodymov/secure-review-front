@@ -14,6 +14,11 @@ export const useAuthStore = defineStore('auth', () => {
   const isGitHubLoading = ref(false)
   const isPasswordLoading = ref(false)
 
+  // New specific loading states to avoid shared spinners
+  const isLoggingIn = ref(false)
+  const isRegistering = ref(false)
+  const isGitHubLoggingIn = ref(false)
+
   // isAuthenticated now only checks token - user will be loaded
   const isAuthenticated = computed(() => !!token.value)
   const isFullyLoaded = computed(() => !!token.value && !!user.value)
@@ -21,6 +26,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function register(username: string, email: string, password: string) {
     isLoading.value = true
+    isRegistering.value = true
     error.value = null
     try {
       const response = await authApi.register({ username, email, password })
@@ -33,11 +39,13 @@ export const useAuthStore = defineStore('auth', () => {
       return false
     } finally {
       isLoading.value = false
+      isRegistering.value = false
     }
   }
 
   async function login(email: string, password: string) {
     isLoading.value = true
+    isLoggingIn.value = true
     error.value = null
     try {
       const response = await authApi.login({ email, password })
@@ -50,11 +58,13 @@ export const useAuthStore = defineStore('auth', () => {
       return false
     } finally {
       isLoading.value = false
+      isLoggingIn.value = false
     }
   }
 
   async function loginWithGitHub() {
     isLoading.value = true
+    isGitHubLoggingIn.value = true
     error.value = null
     try {
       const { url } = await authApi.getGitHubAuthURL()
@@ -62,6 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (e: any) {
       error.value = e.response?.data?.error || 'Ошибка авторизации через GitHub'
       isLoading.value = false
+      isGitHubLoggingIn.value = false
     }
   }
 
@@ -101,6 +112,8 @@ export const useAuthStore = defineStore('auth', () => {
   async function linkGitHub() {
     isGitHubLoading.value = true
     error.value = null
+    // Save return URL for better UX if the redirect goes to /login instead of /profile
+    sessionStorage.setItem('auth_return_url', '/profile')
     try {
       // Get GitHub auth URL with current token (for linking)
       const { url } = await authApi.getGitHubAuthURL()
@@ -108,6 +121,7 @@ export const useAuthStore = defineStore('auth', () => {
     } catch (e: any) {
       error.value = e.response?.data?.error || 'Ошибка привязки GitHub'
       isGitHubLoading.value = false
+      sessionStorage.removeItem('auth_return_url')
     }
   }
 
@@ -178,6 +192,9 @@ export const useAuthStore = defineStore('auth', () => {
     isProfileLoading,
     isGitHubLoading,
     isPasswordLoading,
+    isLoggingIn,
+    isRegistering,
+    isGitHubLoggingIn,
     error,
     
     // Getters

@@ -43,7 +43,7 @@
             <BaseButton
               v-if="review.status === 'completed' || review.status === 'failed'"
               variant="secondary"
-              :loading="reviewStore.isLoading"
+              :loading="reviewStore.isReanalyzing"
               @click="handleReanalyze"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -55,6 +55,7 @@
             <BaseButton
               variant="danger"
               @click="handleDelete"
+              :loading="reviewStore.isDeleting"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6" />

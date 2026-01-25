@@ -37,7 +37,7 @@
     </div>
 
     <!-- Loading State -->
-    <div v-if="reviewStore.isLoading && !reviewStore.reviews.length" class="reviews-loading">
+    <div v-if="reviewStore.isFetching && !reviewStore.reviews.length" class="reviews-loading">
       <BaseLoader text="Загрузка reviews..." />
     </div>
 

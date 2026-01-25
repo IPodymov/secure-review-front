@@ -140,7 +140,7 @@
             type="submit"
             variant="primary"
             size="lg"
-            :loading="reviewStore.isLoading"
+            :loading="reviewStore.isCreating"
             :disabled="!isValid">
             <svg
               width="20"

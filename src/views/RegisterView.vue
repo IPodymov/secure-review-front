@@ -62,7 +62,7 @@
             variant="primary"
             size="lg"
             block
-            :loading="authStore.isLoading"
+            :loading="authStore.isRegistering"
           >
             Зарегистрироваться
           </BaseButton>
@@ -76,7 +76,7 @@
             variant="github"
             size="lg"
             block
-            :loading="authStore.isLoading"
+            :loading="authStore.isGitHubLoggingIn"
             @click="handleGitHubRegister"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
