@@ -1,0 +1,82 @@
+<template>
+  <div v-if="show" :class="['alert', `alert--${variant}`]" role="alert">
+    <div class="alert__content">
+      <slot />
+    </div>
+    <button v-if="dismissible" class="alert__close" @click="$emit('close')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</template>
+
+<script setup lang="ts">
+withDefaults(defineProps<{
+  variant?: 'info' | 'success' | 'warning' | 'error'
+  show?: boolean
+  dismissible?: boolean
+}>(), {
+  variant: 'info',
+  show: true,
+  dismissible: false,
+})
+
+defineEmits<{
+  close: []
+}>()
+</script>
+
+<style scoped>
+.alert {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.alert__content {
+  flex: 1;
+}
+
+.alert__close {
+  flex-shrink: 0;
+  padding: 0.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.alert__close:hover {
+  opacity: 1;
+}
+
+.alert--info {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.alert--success {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.alert--warning {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: #ca8a04;
+  border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+.alert--error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+</style>
