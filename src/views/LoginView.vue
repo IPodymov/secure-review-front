@@ -1,7 +1,12 @@
 <template>
   <AuthLayout>
     <BaseCard>
-      <form @submit.prevent="handleSubmit" class="login-form">
+      <div v-if="isProcessingCallback" class="login-callback">
+        <div class="login-callback__spinner"></div>
+        <p class="login-callback__text">Завершаем авторизацию...</p>
+      </div>
+
+      <form v-else @submit.prevent="handleSubmit" class="login-form">
         <h2 class="login-form__title">Вход в аккаунт</h2>
 
         <BaseAlert
@@ -93,6 +98,7 @@ const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const oauthError = ref('');
+const isProcessingCallback = ref(false);
 
 const oauthErrorMessage = computed(() => {
   const errors: Record<string, string> = {
@@ -108,6 +114,7 @@ onMounted(async () => {
   // Check for OAuth token in URL (GitHub Login/Link success)
   const token = route.query.token as string;
   if (token) {
+    isProcessingCallback.value = true;
     try {
       await authStore.handleGitHubCallback(token);
       if (authStore.isAuthenticated) {
@@ -119,9 +126,11 @@ onMounted(async () => {
         router.push(returnUrl || redirect || '/reviews');
       } else {
         oauthError.value = 'auth_failed';
+        isProcessingCallback.value = false;
       }
     } catch (e) {
       oauthError.value = 'auth_failed';
+      isProcessingCallback.value = false;
     }
     // Clean URL
     router.replace({ query: {} });
@@ -217,5 +226,32 @@ function handleGitHubLogin() {
 
 .login-form__footer a:hover {
   text-decoration: underline;
+}
+
+.login-callback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 1rem;
+}
+
+.login-callback__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.login-callback__text {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>
