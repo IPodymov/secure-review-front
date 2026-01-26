@@ -46,14 +46,6 @@ export const authApi = {
   },
 
   /**
-   * Link GitHub account to existing user (requires auth)
-   */
-  async linkGitHub(code: string): Promise<{ message: string }> {
-    const response = await apiClient.post<{ message: string }>('/auth/github/link', { code })
-    return response.data
-  },
-
-  /**
    * Unlink GitHub account from user (requires auth)
    */
   async unlinkGitHub(): Promise<{ message: string }> {

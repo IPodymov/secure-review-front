@@ -190,8 +190,10 @@ onMounted(async () => {
     // Refresh profile to show linked account status immediately
     await authStore.fetchProfile();
 
-    // Clean URL
-    router.replace({ query: {} });
+    // Clean URL preserving other params
+    const newQuery = { ...route.query };
+    delete newQuery.status;
+    router.replace({ query: newQuery });
   }
 });
 
@@ -392,13 +394,16 @@ async function handleDeleteAccount() {
 .github-section__disconnected {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   gap: 1rem;
+  width: 100%;
 }
 
 .github-section__description {
   margin: 0;
   color: var(--color-text-muted);
+  max-width: 400px;
 }
 
 /* Password Form */
