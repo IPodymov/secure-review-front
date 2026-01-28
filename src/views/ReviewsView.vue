@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useReviewStore } from '@/stores/reviews'
+import { useReviewStore } from '@/stores'
 import type { ReviewStatus, SecurityIssue, SecuritySeverity } from '@/types'
 import { BaseButton, BaseBadge, BaseLoader } from '@/components/ui'
 

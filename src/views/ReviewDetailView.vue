@@ -157,7 +157,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useReviewStore } from '@/stores/reviews'
+import { useReviewStore } from '@/stores'
 import type { ReviewStatus, SecuritySeverity } from '@/types'
 import { BaseCard, BaseBadge, BaseButton, BaseLoader, BaseAlert } from '@/components/ui'
 

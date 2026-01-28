@@ -1,4 +1,4 @@
-import { apiClient } from './client'
+import { apiClient } from '../core/client'
 import type { AuthResponse, LoginInput, RegisterInput, GitHubAuthURL } from '@/types'
 
 export const authApi = {

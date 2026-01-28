@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/stores';
 import { AuthLayout } from '@/components/layout';
 import { BaseCard, BaseInput, BaseButton, BaseAlert } from '@/components/ui';
 

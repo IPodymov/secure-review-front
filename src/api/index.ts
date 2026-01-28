@@ -1,4 +1,4 @@
-export { apiClient, setAuthToken, clearAuthToken, getAuthToken } from './client'
+export { apiClient, setAuthToken, clearAuthToken, getAuthToken } from './core/client'
 export { authApi } from './auth'
 export { usersApi } from './users'
 export { reviewsApi } from './reviews'

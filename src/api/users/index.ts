@@ -1,4 +1,4 @@
-import { apiClient } from './client'
+import { apiClient } from '../core/client'
 import type { User, UpdateUserInput, GitHubRepository } from '@/types'
 
 export const usersApi = {

@@ -1,4 +1,4 @@
-import { apiClient } from './client'
+import { apiClient } from '../core/client'
 import type { CodeReview, CreateReviewInput, ReviewListResponse } from '@/types'
 
 export const reviewsApi = {

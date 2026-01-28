@@ -164,7 +164,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/stores';
 import { BaseCard, BaseInput, BaseButton, BaseAlert } from '@/components/ui';
 
 const route = useRoute();

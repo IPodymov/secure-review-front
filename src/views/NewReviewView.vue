@@ -163,8 +163,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useReviewStore } from '@/stores/reviews';
-import { useAuthStore } from '@/stores/auth';
+import { useReviewStore, useAuthStore } from '@/stores';
 import {
   BaseCard,
   BaseInput,

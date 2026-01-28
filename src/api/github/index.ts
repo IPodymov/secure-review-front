@@ -1,4 +1,4 @@
-import { apiClient } from './client'
+import { apiClient } from '../core/client'
 import type { GitHubRepository } from '@/types/models/github'
 
 export const githubApi = {
