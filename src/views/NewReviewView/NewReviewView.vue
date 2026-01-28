@@ -2,16 +2,7 @@
   <div class="new-review-page">
     <div class="new-review-page__header">
       <router-link to="/reviews" class="new-review-page__back">
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2">
-          <line x1="19" y1="12" x2="5" y2="12" />
-          <polyline points="12 19 5 12 12 5" />
-        </svg>
+        <ArrowLeft :size="20"/>
         Назад к списку
       </router-link>
       <h1 class="new-review-page__title">Новый анализ кода</h1>
@@ -23,38 +14,39 @@
     <BaseCard>
       <form @submit.prevent="handleSubmit" class="review-form">
         <BaseAlert
-          v-if="reviewStore.error"
-          variant="error"
-          :show="true"
-          dismissible
-          @close="reviewStore.error = null">
+            v-if="reviewStore.error"
+            variant="error"
+            :show="true"
+            dismissible
+            @close="reviewStore.error = null">
           {{ reviewStore.error }}
         </BaseAlert>
 
         <div class="review-form__row">
           <div class="review-form__tabs">
             <button
-              type="button"
-              class="review-form__tab"
-              :class="{ 'review-form__tab--active': mode === 'manual' }"
-              @click="mode = 'manual'">
+                type="button"
+                class="review-form__tab"
+                :class="{ 'review-form__tab--active': mode === 'manual' }"
+                @click="mode = 'manual'">
               Код вручную
             </button>
             <button
-              type="button"
-              class="review-form__tab"
-              :class="{ 'review-form__tab--active': mode === 'github' }"
-              @click="mode = 'github'">
+                type="button"
+                class="review-form__tab"
+                :class="{ 'review-form__tab--active': mode === 'github' }"
+                @click="mode = 'github'">
               GitHub Репозиторий
             </button>
           </div>
         </div>
 
         <BaseInput
-          v-model="title"
-          label="Название"
-          placeholder="Например: Проверка функции авторизации"
-          required />
+            v-model="title"
+            label="Название"
+            placeholder="Например: Проверка функции авторизации"
+            :max-length="255"
+            required/>
 
         <!-- Manual Mode -->
         <template v-if="mode === 'manual'">
@@ -62,19 +54,19 @@
             <div class="review-form__select-wrapper">
               <label class="review-form__label">Язык программирования</label>
               <BaseSelect
-                v-model="language"
-                :options="languageOptions"
-                placeholder="Выберите язык" />
+                  v-model="language"
+                  :options="languageOptions"
+                  placeholder="Выберите язык"/>
             </div>
           </div>
 
           <BaseTextarea
-            v-model="code"
-            label="Код для анализа"
-            placeholder="Вставьте ваш код здесь..."
-            :rows="16"
-            monospace
-            required />
+              v-model="code"
+              label="Код для анализа"
+              placeholder="Вставьте ваш код здесь..."
+              :rows="16"
+              monospace
+              required/>
         </template>
 
         <!-- GitHub Mode -->
@@ -93,10 +85,10 @@
                   Загрузка репозиториев...
                 </div>
                 <BaseSelect
-                  v-else
-                  v-model="selectedRepo"
-                  :options="repoOptions"
-                  placeholder="Выберите репозиторий" />
+                    v-else
+                    v-model="selectedRepo"
+                    :options="repoOptions"
+                    placeholder="Выберите репозиторий"/>
               </div>
             </div>
 
@@ -107,20 +99,23 @@
                   Загрузка веток...
                 </div>
                 <BaseSelect
-                  v-else
-                  v-model="selectedBranch"
-                  :options="branchOptions"
-                  placeholder="Выберите ветку" />
+                    v-else
+                    v-model="selectedBranch"
+                    :options="branchOptions"
+                    placeholder="Выберите ветку"/>
               </div>
             </div>
+          </div>
+        </template>
 
-            <BaseTextarea
+        <!-- Common: Custom Prompt -->
+        <div v-if="mode === 'manual' || (mode === 'github' && isGitHubConnected)">
+          <BaseTextarea
               v-model="customPrompt"
               label="Запрос пользователя / Инструкции"
               placeholder="Опишите, на что обратить внимание при анализе..."
-              :rows="5" />
-          </div>
-        </template>
+              :rows="5"/>
+        </div>
 
         <div class="review-form__hints">
           <h4>Что проверяет AI:</h4>
@@ -134,24 +129,15 @@
 
         <div class="review-form__actions">
           <router-link to="/reviews">
-            <BaseButton variant="secondary" type="button"> Отмена </BaseButton>
+            <BaseButton variant="secondary" type="button"> Отмена</BaseButton>
           </router-link>
           <BaseButton
-            type="submit"
-            variant="primary"
-            size="lg"
-            :loading="reviewStore.isCreating"
-            :disabled="!isValid">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              <path d="M9 12l2 2 4-4" />
-            </svg>
+              type="submit"
+              variant="primary"
+              size="lg"
+              :loading="reviewStore.isCreating"
+              :disabled="!isValid">
+            <ShieldCheck :size="20"/>
             Начать анализ
           </BaseButton>
         </div>
@@ -161,19 +147,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { useReviewStore, useAuthStore } from '@/stores';
-import {
-  BaseCard,
-  BaseInput,
-  BaseTextarea,
-  BaseSelect,
-  BaseButton,
-  BaseAlert,
-} from '@/components/ui';
-import { githubApi } from '@/api';
-import type { GitHubRepository } from '@/types/models/github';
+import {computed, onMounted, ref, watch} from 'vue';
+import {useRouter} from 'vue-router';
+import {useAuthStore, useReviewStore} from '@/stores';
+import {BaseAlert, BaseButton, BaseCard, BaseInput, BaseSelect, BaseTextarea,} from '@/components/ui';
+import {githubApi} from '@/api';
+import type {GitHubRepository} from '@/types/models/github';
+import {ArrowLeft, ShieldCheck} from 'lucide-vue-next';
 
 const router = useRouter();
 const reviewStore = useReviewStore();
@@ -196,26 +176,26 @@ const isLoadingBranches = ref(false);
 const isGitHubConnected = computed(() => !!authStore.user?.github_login);
 
 const languageOptions = [
-  { value: 'python', label: 'Python' },
-  { value: 'javascript', label: 'JavaScript' },
-  { value: 'typescript', label: 'TypeScript' },
-  { value: 'go', label: 'Go' },
-  { value: 'java', label: 'Java' },
-  { value: 'csharp', label: 'C#' },
-  { value: 'cpp', label: 'C++' },
-  { value: 'c', label: 'C' },
-  { value: 'rust', label: 'Rust' },
-  { value: 'php', label: 'PHP' },
-  { value: 'ruby', label: 'Ruby' },
-  { value: 'swift', label: 'Swift' },
-  { value: 'kotlin', label: 'Kotlin' },
-  { value: 'sql', label: 'SQL' },
-  { value: 'html', label: 'HTML' },
-  { value: 'css', label: 'CSS' },
-  { value: 'shell', label: 'Shell/Bash' },
-  { value: 'yaml', label: 'YAML' },
-  { value: 'json', label: 'JSON' },
-  { value: 'other', label: 'Другой' },
+  {value: 'python', label: 'Python'},
+  {value: 'javascript', label: 'JavaScript'},
+  {value: 'typescript', label: 'TypeScript'},
+  {value: 'go', label: 'Go'},
+  {value: 'java', label: 'Java'},
+  {value: 'csharp', label: 'C#'},
+  {value: 'cpp', label: 'C++'},
+  {value: 'c', label: 'C'},
+  {value: 'rust', label: 'Rust'},
+  {value: 'php', label: 'PHP'},
+  {value: 'ruby', label: 'Ruby'},
+  {value: 'swift', label: 'Swift'},
+  {value: 'kotlin', label: 'Kotlin'},
+  {value: 'sql', label: 'SQL'},
+  {value: 'html', label: 'HTML'},
+  {value: 'css', label: 'CSS'},
+  {value: 'shell', label: 'Shell/Bash'},
+  {value: 'yaml', label: 'YAML'},
+  {value: 'json', label: 'JSON'},
+  {value: 'other', label: 'Другой'},
 ];
 
 const repoOptions = computed(() => {
@@ -278,7 +258,10 @@ watch(selectedRepo, async (newRepo) => {
     // Auto-select 'main' or 'master' if available
     if (branches.value.includes('main')) selectedBranch.value = 'main';
     else if (branches.value.includes('master')) selectedBranch.value = 'master';
-    else if (branches.value.length > 0) selectedBranch.value = branches.value[0];
+    else if (branches.value.length > 0) {
+      const first = branches.value[0];
+      if (first) selectedBranch.value = first;
+    }
   } catch (e) {
     console.error('Failed to fetch branches', e);
     reviewStore.error = 'Failed to load branches';
@@ -297,6 +280,7 @@ const handleSubmit = async () => {
         title: title.value.trim(),
         code: code.value,
         language: language.value || 'Mixed',
+        custom_prompt: customPrompt.value,
       });
     } else {
       const parts = selectedRepo.value.split('/');
@@ -332,157 +316,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.new-review-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-}
-
-.new-review-page__header {
-  margin-bottom: 2rem;
-}
-
-.new-review-page__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  transition: color 0.2s;
-}
-
-.new-review-page__back:hover {
-  color: var(--color-primary);
-}
-
-.new-review-page__title {
-  margin: 0 0 0.5rem;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.new-review-page__subtitle {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 1.125rem;
-}
-
-.review-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.review-form__row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-.review-form__select-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-}
-
-.review-form__label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text);
-  margin-bottom: 0.5rem;
-}
-
-.review-form__hints {
-  background-color: var(--color-bg-tertiary);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.review-form__hints h4 {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-}
-
-.review-form__hints ul {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.5rem;
-  padding-left: 0;
-}
-
-.review-form__hints li {
-  color: var(--color-text-secondary);
-}
-
-.review-form__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1rem;
-  border-top: 1px solid var(--color-border);
-  padding-top: 1.5rem;
-}
-
-.review-form__tabs {
-  display: flex;
-  gap: 1rem;
-  border-bottom: 1px solid var(--color-border);
-  width: 100%;
-  margin-bottom: 0.5rem;
-}
-
-.review-form__tab {
-  background: none;
-  border: none;
-  padding: 0.75rem 0;
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  position: relative;
-  transition: color 0.2s;
-}
-
-.review-form__tab:hover {
-  color: var(--color-text);
-}
-
-.review-form__tab--active {
-  color: var(--color-primary);
-  font-weight: 600;
-}
-
-.review-form__tab--active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--color-primary);
-}
-
-.review-form__loading-text {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 0.5rem;
-}
-
-.review-form__connect-github {
-  text-align: center;
-  padding: 3rem 2rem;
-  background-color: var(--color-bg-tertiary);
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  color: var(--color-text-secondary);
-}
-</style>
+<style scoped src="./NewReviewView.styles.css"></style>

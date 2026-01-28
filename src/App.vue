@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useAuthStore } from '@/stores'
-import { AppHeader } from '@/components/layout'
+import {onMounted} from 'vue'
+import {useAuthStore} from '@/stores'
+import {AppHeader} from '@/components/layout'
 
 const authStore = useAuthStore()
 
@@ -13,9 +13,9 @@ onMounted(async () => {
 
 <template>
   <div class="app">
-    <AppHeader v-if="authStore.isFullyLoaded" />
+    <AppHeader v-if="authStore.isFullyLoaded"/>
     <main class="app__main">
-      <router-view />
+      <router-view/>
     </main>
   </div>
 </template>
