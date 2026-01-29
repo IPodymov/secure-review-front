@@ -59,10 +59,6 @@ class Logger {
   private shouldLog(level: LogLevel): boolean {
     return this.config.enabled && level >= this.config.level
   }
-
-  private getTimestamp(): string {
-    return new Date().toLocaleTimeString()
-  }
 }
 
 export const logger = new Logger()

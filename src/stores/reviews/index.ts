@@ -164,6 +164,44 @@ export const useReviewStore = defineStore('review', () => {
     currentReview.value = null
   }
 
+  // Download review as PDF
+  async function downloadReviewPDF(id: string, title: string = 'review') {
+    try {
+      const blob = await reviewsApi.downloadPDF(id)
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${title.replace(/[^a-zA-Z0-9а-яА-ЯёЁ]/g, '_')}_${id}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+      return true
+    } catch (e: any) {
+      error.value = e.response?.data?.error || 'Ошибка скачивания PDF'
+      return false
+    }
+  }
+
+  // Download review as Markdown
+  async function downloadReviewMarkdown(id: string, title: string = 'review') {
+    try {
+      const blob = await reviewsApi.downloadMarkdown(id)
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${title.replace(/[^a-zA-Z0-9а-яА-ЯёЁ]/g, '_')}_${id}.md`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+      return true
+    } catch (e: any) {
+      error.value = e.response?.data?.error || 'Ошибка скачивания Markdown'
+      return false
+    }
+  }
+
   return {
     // State
     reviews,
@@ -191,5 +229,7 @@ export const useReviewStore = defineStore('review', () => {
     reanalyzeReview,
     pollReviewStatus,
     clearCurrentReview,
+    downloadReviewPDF,
+    downloadReviewMarkdown,
   }
 })

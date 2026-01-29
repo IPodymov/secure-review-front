@@ -17,25 +17,31 @@ export interface SecurityIssue {
   severity: SecuritySeverity
   title: string
   description: string
-  line_start: number
-  line_end: number
+  file_path?: string | null
+  line_start?: number | null
+  line_end?: number | null
   suggestion: string
-  cwe?: string
+  cwe?: string | null
+  code_snippet?: string | null
   created_at: string
 }
 
 /**
- * Code review entity
+ * Code review response from API
  */
 export interface CodeReview {
   id: string
   user_id: string
   title: string
-  code: string
+  code?: string
   language: string
   status: ReviewStatus
   result?: string | null
+  custom_prompt?: string | null
   security_issues?: SecurityIssue[]
+  overall_score: number
+  summary?: string
+  suggestions?: string[]
   created_at: string
   completed_at?: string | null
 }
@@ -61,4 +67,5 @@ export interface ReviewListResponse {
   total: number
   page: number
   page_size: number
+  total_pages: number
 }

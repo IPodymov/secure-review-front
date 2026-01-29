@@ -48,6 +48,7 @@
             :max-length="255"
             required/>
 
+
         <!-- Manual Mode -->
         <template v-if="mode === 'manual'">
           <div class="review-form__row">
@@ -120,10 +121,11 @@
         <div class="review-form__hints">
           <h4>Что проверяет AI:</h4>
           <ul>
-            <li>🔒 Уязвимости безопасности (SQL Injection, XSS, и др.)</li>
+            <li>🔒 Уязвимости безопасности (SQL Injection, XSS, CSRF и др.)</li>
             <li>📝 Качество и читаемость кода</li>
             <li>⚡ Производительность и оптимизация</li>
             <li>🐛 Потенциальные баги и ошибки</li>
+            <li>🏗️ Архитектурные рекомендации</li>
           </ul>
         </div>
 
@@ -197,6 +199,7 @@ const languageOptions = [
   {value: 'json', label: 'JSON'},
   {value: 'other', label: 'Другой'},
 ];
+
 
 const repoOptions = computed(() => {
   return repos.value.map((repo) => ({
@@ -279,8 +282,8 @@ const handleSubmit = async () => {
       review = await reviewStore.createReview({
         title: title.value.trim(),
         code: code.value,
-        language: language.value || 'Mixed',
-        custom_prompt: customPrompt.value,
+        language: language.value || 'other',
+        custom_prompt: customPrompt.value || undefined,
       });
     } else {
       const parts = selectedRepo.value.split('/');
@@ -294,8 +297,8 @@ const handleSubmit = async () => {
         repo_owner: owner,
         repo_name: name,
         repo_branch: selectedBranch.value,
-        custom_prompt: customPrompt.value,
-        language: 'Mixed (Repository)',
+        custom_prompt: customPrompt.value || undefined,
+        language: 'Mixed',
       });
     }
 

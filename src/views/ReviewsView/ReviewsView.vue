@@ -87,7 +87,7 @@
           </span>
         </div>
 
-        <pre class="review-item__code">{{ truncateCode(review.code) }}</pre>
+        <pre v-if="review.code" class="review-item__code">{{ truncateCode(review.code) }}</pre>
       </div>
 
       <!-- Pagination -->

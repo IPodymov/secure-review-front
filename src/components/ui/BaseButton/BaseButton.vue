@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'github';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'github' | 'success';
   size?: 'sm' | 'md' | 'lg';
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;

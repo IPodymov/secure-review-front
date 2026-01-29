@@ -4,20 +4,20 @@
       <h1 class="profile-page__title">Профиль</h1>
 
       <BaseAlert
-        v-if="successMessage"
-        variant="success"
-        :show="true"
-        dismissible
-        @close="successMessage = ''">
+          v-if="successMessage"
+          variant="success"
+          :show="true"
+          dismissible
+          @close="successMessage = ''">
         {{ successMessage }}
       </BaseAlert>
 
       <BaseAlert
-        v-if="authStore.error"
-        variant="error"
-        :show="true"
-        dismissible
-        @close="authStore.error = null">
+          v-if="authStore.error"
+          variant="error"
+          :show="true"
+          dismissible
+          @close="authStore.error = null">
         {{ authStore.error }}
       </BaseAlert>
 
@@ -26,10 +26,10 @@
         <form @submit.prevent="handleUpdateProfile" class="profile-form">
           <div class="profile-form__avatar">
             <img
-              v-if="authStore.user?.avatar_url"
-              :src="authStore.user.avatar_url"
-              :alt="authStore.user.username"
-              class="profile-form__avatar-img" />
+                v-if="authStore.user?.avatar_url"
+                :src="authStore.user.avatar_url"
+                :alt="authStore.user.username"
+                class="profile-form__avatar-img"/>
             <div v-else class="profile-form__avatar-placeholder">
               {{ authStore.user?.username?.charAt(0).toUpperCase() }}
             </div>
@@ -37,17 +37,17 @@
 
           <div class="profile-form__fields">
             <BaseInput
-              v-model="username"
-              label="Имя пользователя"
-              placeholder="Ваше имя"
-              :disabled="authStore.isProfileLoading" />
+                v-model="username"
+                label="Имя пользователя"
+                placeholder="Ваше имя"
+                :disabled="authStore.isProfileLoading"/>
 
             <BaseInput
-              :model-value="authStore.user?.email || ''"
-              label="Email"
-              type="email"
-              disabled
-              hint="Email нельзя изменить" />
+                :model-value="authStore.user?.email || ''"
+                label="Email"
+                type="email"
+                disabled
+                hint="Email нельзя изменить"/>
           </div>
 
           <div class="profile-form__actions">
@@ -63,16 +63,16 @@
         <div class="github-section">
           <div v-if="authStore.hasGitHub" class="github-section__connected">
             <div class="github-section__info">
-              <Github :size="24" class="github-section__icon" />
+              <Github :size="24" class="github-section__icon"/>
               <div>
                 <p class="github-section__login">@{{ authStore.user?.github_login }}</p>
                 <p class="github-section__status">GitHub аккаунт подключен</p>
               </div>
             </div>
             <BaseButton
-              variant="danger"
-              @click="handleUnlinkGitHub"
-              :loading="authStore.isGitHubLoading">
+                variant="danger"
+                @click="handleUnlinkGitHub"
+                :loading="authStore.isGitHubLoading">
               Отключить
             </BaseButton>
           </div>
@@ -81,10 +81,10 @@
               Подключите GitHub для быстрого входа и доступа к вашим репо��иториям
             </p>
             <BaseButton
-              variant="github"
-              @click="handleLinkGitHub"
-              :loading="authStore.isGitHubLoading">
-              <Github :size="20" />
+                variant="github"
+                @click="handleLinkGitHub"
+                :loading="authStore.isGitHubLoading">
+              <Github :size="20"/>
               Подключить GitHub
             </BaseButton>
           </div>
@@ -96,32 +96,32 @@
         <form @submit.prevent="handleChangePassword" class="password-form">
           <div class="password-form__fields">
             <BaseInput
-              v-model="oldPassword"
-              type="password"
-              label="Текущий пароль"
-              placeholder="Введите текущий пароль"
-              autocomplete="current-password" />
+                v-model="oldPassword"
+                type="password"
+                label="Текущий пароль"
+                placeholder="Введите текущий пароль"
+                autocomplete="current-password"/>
             <BaseInput
-              v-model="newPassword"
-              type="password"
-              label="Новый пароль"
-              placeholder="Минимум 8 символов"
-              autocomplete="new-password"
-              :error="newPasswordError" />
+                v-model="newPassword"
+                type="password"
+                label="Новый пароль"
+                placeholder="Минимум 8 символов"
+                autocomplete="new-password"
+                :error="newPasswordError"/>
             <BaseInput
-              v-model="confirmNewPassword"
-              type="password"
-              label="Подтвердите пароль"
-              placeholder="Повторите новый пароль"
-              autocomplete="new-password"
-              :error="confirmNewPasswordError" />
+                v-model="confirmNewPassword"
+                type="password"
+                label="Подтвердите пароль"
+                placeholder="Повторите новый пароль"
+                autocomplete="new-password"
+                :error="confirmNewPasswordError"/>
           </div>
           <div class="password-form__actions">
             <BaseButton
-              type="submit"
-              variant="secondary"
-              :loading="authStore.isPasswordLoading"
-              :disabled="!canChangePassword">
+                type="submit"
+                variant="secondary"
+                :loading="authStore.isPasswordLoading"
+                :disabled="!canChangePassword">
               Изменить пароль
             </BaseButton>
           </div>
@@ -132,7 +132,7 @@
       <BaseCard title="Опасная зона" class="profile-card profile-card--danger">
         <div class="danger-zone">
           <p class="danger-zone__description">
-            После удаления аккаунта все данные будут безвозвратн�� утеряны.
+            После удаления аккаунта все данные будут безвозвратно утеряны.
           </p>
           <BaseButton variant="danger" @click="handleDeleteAccount" :loading="authStore.isLoading">
             Удалить аккаунт
@@ -144,11 +144,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores';
-import { BaseCard, BaseInput, BaseButton, BaseAlert } from '@/components/ui';
-import { Github } from 'lucide-vue-next';
+import {computed, onMounted, ref, watch} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {useAuthStore} from '@/stores';
+import {BaseAlert, BaseButton, BaseCard, BaseInput} from '@/components/ui';
+import {Github} from 'lucide-vue-next';
 
 const route = useRoute();
 const router = useRouter();
@@ -175,20 +175,20 @@ onMounted(async () => {
     await authStore.fetchProfile();
 
     // Clean URL preserving other params
-    const newQuery = { ...route.query };
+    const newQuery = {...route.query};
     delete newQuery.status;
-    router.replace({ query: newQuery });
+    router.replace({query: newQuery});
   }
 });
 
 watch(
-  () => authStore.user,
-  (user) => {
-    if (user) {
-      username.value = user.username;
-      avatarUrl.value = user.avatar_url || '';
+    () => authStore.user,
+    (user) => {
+      if (user) {
+        username.value = user.username;
+        avatarUrl.value = user.avatar_url || '';
+      }
     }
-  }
 );
 
 // Password validation
@@ -208,11 +208,11 @@ const confirmNewPasswordError = computed(() => {
 
 const canChangePassword = computed(() => {
   return (
-    oldPassword.value &&
-    newPassword.value &&
-    confirmNewPassword.value &&
-    !newPasswordError.value &&
-    !confirmNewPasswordError.value
+      oldPassword.value &&
+      newPassword.value &&
+      confirmNewPassword.value &&
+      !newPasswordError.value &&
+      !confirmNewPasswordError.value
   );
 });
 

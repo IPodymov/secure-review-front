@@ -1,8 +1,8 @@
 // User types
-export type { User, LoginInput, RegisterInput, UpdateUserInput } from './user'
+export type {User, LoginInput, RegisterInput, UpdateUserInput} from './user'
 
 // Auth types
-export type { AuthResponse } from './auth'
+export type {AuthResponse} from './auth'
 
 // Review types
 export type {
@@ -15,7 +15,7 @@ export type {
 } from './review'
 
 // GitHub types
-export type { GitHubRepository, GitHubAuthURL } from './github'
+export type {GitHubRepository, GitHubAuthURL} from './github'
 
 // API types
-export type { ApiError } from './api'
+export type {ApiError} from './api'

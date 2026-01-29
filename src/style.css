@@ -23,6 +23,8 @@
   --color-danger-alpha: rgba(239, 68, 68, 0.15);
   
   --color-success: #22c55e;
+  --color-success-dark: #16a34a;
+  --color-success-alpha: rgba(34, 197, 94, 0.15);
   --color-warning: #eab308;
   --color-info: #3b82f6;
 }
@@ -47,6 +49,10 @@
     --color-danger: #f87171;
     --color-danger-dark: #ef4444;
     --color-danger-alpha: rgba(248, 113, 113, 0.2);
+
+    --color-success: #4ade80;
+    --color-success-dark: #22c55e;
+    --color-success-alpha: rgba(74, 222, 128, 0.2);
   }
 }
 

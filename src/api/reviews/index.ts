@@ -42,4 +42,24 @@ export const reviewsApi = {
     const response = await apiClient.post<CodeReview>(`/reviews/${id}/reanalyze`)
     return response.data
   },
+
+  /**
+   * Download review as PDF
+   */
+  async downloadPDF(id: string): Promise<Blob> {
+    const response = await apiClient.get(`/reviews/${id}/pdf`, {
+      responseType: 'blob',
+    })
+    return response.data
+  },
+
+  /**
+   * Download review as Markdown
+   */
+  async downloadMarkdown(id: string): Promise<Blob> {
+    const response = await apiClient.get(`/reviews/${id}/markdown`, {
+      responseType: 'blob',
+    })
+    return response.data
+  },
 }
