@@ -298,7 +298,7 @@ const handleSubmit = async () => {
         repo_name: name,
         repo_branch: selectedBranch.value,
         custom_prompt: customPrompt.value || undefined,
-        language: 'Mixed',
+        // language is optional, backend handles it for repos
       });
     }
 

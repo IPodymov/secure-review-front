@@ -115,7 +115,7 @@
         <BaseCard v-if="review.security_issues?.length" class="review-issues">
           <template #header>
             <div class="review-issues__header">
-              <h2>Найденные про��лемы ({{ review.security_issues.length }})</h2>
+              <h2>Найденные проблемы ({{ review.security_issues.length }})</h2>
               <div class="review-issues__summary">
               <span
                   v-for="summary in issuesSummary"
@@ -151,7 +151,8 @@
                 </svg>
                 <span v-if="issue.file_path">{{ issue.file_path }}</span>
                 <span v-if="issue.line_start">
-                  {{ issue.file_path ? ':' : 'Строки ' }}{{ issue.line_start }}<span v-if="issue.line_end && issue.line_end !== issue.line_start">-{{ issue.line_end }}</span>
+                  {{ issue.file_path ? ':' : 'Строки ' }}{{ issue.line_start }}<span
+                    v-if="issue.line_end && issue.line_end !== issue.line_start">-{{ issue.line_end }}</span>
                 </span>
               </div>
 
@@ -176,22 +177,22 @@
           </div>
         </BaseCard>
 
-        <!-- Source Code -->
-        <BaseCard title="Исходный код">
+        <!-- Source Code (Hidden by request) -->
+        <!-- <BaseCard title="Исходный код">
           <pre class="review-code">{{ review.code }}</pre>
-        </BaseCard>
+        </BaseCard> -->
       </div> <!-- Close review-detail-header -->
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, watch, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useReviewStore } from '@/stores'
-import type { ReviewStatus, SecuritySeverity } from '@/types'
-import { BaseCard, BaseBadge, BaseButton, BaseLoader, BaseAlert } from '@/components/ui'
-import { ArrowLeft, RefreshCw, Trash2, CheckCircle, Download, FileText } from 'lucide-vue-next'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {useReviewStore} from '@/stores'
+import type {ReviewStatus, SecuritySeverity} from '@/types'
+import {BaseAlert, BaseBadge, BaseButton, BaseCard, BaseLoader} from '@/components/ui'
+import {ArrowLeft, CheckCircle, Download, FileText, RefreshCw, Trash2} from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -238,13 +239,17 @@ onMounted(() => {
 })
 
 // Watch for status changes to poll
-watch(() => review.value?.status, (status) => {
-  if (status === 'pending' || status === 'processing') {
+watch(() => review.value?.status, (status, oldStatus) => {
+  // Only start polling if status changed TO pending/processing and not already polling
+  if ((status === 'pending' || status === 'processing') &&
+      status !== oldStatus &&
+      !reviewStore.isPolling) {
     reviewStore.pollReviewStatus(route.params.id as string)
   }
 })
 
 onUnmounted(() => {
+  reviewStore.stopPolling()
   reviewStore.clearCurrentReview()
 })
 
@@ -289,9 +294,7 @@ function formatDate(dateStr: string): string {
 async function handleReanalyze() {
   const id = route.params.id as string
   await reviewStore.reanalyzeReview(id)
-  if (review.value?.status === 'pending' || review.value?.status === 'processing') {
-    reviewStore.pollReviewStatus(id)
-  }
+  // Polling will be triggered automatically by the watch when status changes
 }
 
 async function handleDelete() {
